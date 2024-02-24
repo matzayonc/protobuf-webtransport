@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Transport Web Client</title>
+
+    <script>
+        // const [url, fingerprintHex] = ['https://matzayonc.pl:4443', 'f8553b98e211d974980fb460d63c789892f1fdee434302697b7fabfa8d462fc7']
+        const [url, fingerprintHex] = ['https://localhost:4443', '5bbf7b29b45717c2bf427f3ecb6ec35d62929b7e4868e1a0af76352ebfbb1a34']
+        
+        let fingerprint = [];
+        for (let c = 0; c < fingerprintHex.length - 1; c += 2) {
+            fingerprint.push(parseInt(fingerprintHex.substring(c, c + 2), 16));
+        }
+
+        const wt = new WebTransport(url, {
+            serverCertificateHashes: [{
+                "algorithm": "sha-256",
+                "value": new Uint8Array(fingerprint),
+            }],
+        });
+
+        const run = async (msg) => {
+            await wt.ready;
+
+            console.log("connected");
+
+            let writer;
+            let reader;
+
+            // Create a bidirectional stream
+            const stream = await wt.createBidirectionalStream();
+            console.log("created stream");
+
+            writer = stream.writable.getWriter();
+            reader = stream.readable.getReader();
+
+            // Create a message
+            const encoded = new TextEncoder().encode(msg);
+
+            await writer.write(encoded);
+            await writer.close();
+            writer.releaseLock();
+
+            console.log("send: " + msg);
+
+            // Read a message from it
+            // TODO handle partial reads
+            const { value } = await reader.read();
+
+            const recv = new TextDecoder().decode(value);
+            console.log("recv: " + recv);
+
+            // document.getElementById("output").innerText = recv;
+            console.log("closed");
+
+            writer.releaseLock();
+            reader.releaseLock();
+
+            return recv;
+        }
+
+        async function receiveUnidirectional() {
+            await wt.ready;
+
+            console.log("waiting for unidirectional stream");
+            const uds = wt.incomingUnidirectionalStreams;
+            const reader = uds.getReader();
+            console.log("got unidirectional stream");
+            while (true) {
+                const { done, value: stream } = await reader.read();
+                if (done) {
+                    console.log("no more unidirectional streams");
+                    break;
+                }
+
+                console.log("reading data from unidirectional stream");
+
+                await readData(stream);
+            }
+        }
+
+        async function readData(receiveStream) {
+            const reader = receiveStream.getReader();
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) {
+                    break;
+                }
+                // value is a Uint8Array
+                const recv = new TextDecoder().decode(value);
+
+                console.log('got data from unidirectional stream: ' + recv);
+
+                document.getElementById("output").innerText = recv;
+            }
+        }
+
+
+        const init = async () => {
+            document.getElementById("input").addEventListener("keypress", async event => {
+                if (event.key === "Enter") {
+                    const msg = document.getElementById("input").value;
+                    document.getElementById("input").value = '';
+
+                    run(msg);
+                }
+            });
+
+            await wt.ready;
+            // while (true) {
+                console.log('checking for unidirectional streams...')
+                await receiveUnidirectional();
+            // }
+        }
+        window.onload = init;
+    </script>
+</head>
+<body>
+    <input type="text" id="input" placeholder="Hello, world!">
+    <p id="output"></p>
+</body>
+</html>

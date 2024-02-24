@@ -1,0 +1,19 @@
+syntax = "proto3";
+package chat;
+
+service Messenger {
+  rpc Publish (PublishRequest) returns (PublishReply) {}
+  rpc Update (UpdateRequest) returns (PublishReply) {}
+}
+
+message PublishRequest {
+  string message = 1;
+}
+
+message PublishReply {
+  string message = 1;
+}
+
+message UpdateRequest {
+  repeated string messages = 1;
+}

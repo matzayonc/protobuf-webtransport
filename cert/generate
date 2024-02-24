@@ -1,0 +1,14 @@
+#/bin/bash
+# Inspired by https://github.com/kixelated/webtransport-rs/blob/66839f50439f46fc943912ac7d4ae0a11fa36940/webtransport-quinn/cert/generate#L1-L13
+set -euo pipefail
+cd "$(dirname "${BASH_SOURCE[0]}")"
+
+# Generate a self-signed certificate for localhost.
+# This is only valid for 10 days so we can use serverCertificateHashes to avoid a CA (bugged).
+# https://developer.mozilla.org/en-US/docs/Web/API/WebTransport/WebTransport#servercertificatehashes
+# openssl genpkey -algorithm Ed25519 -out localhost.key # Ed25519 is not supported by Chrome.
+openssl ecparam -genkey -name prime256v1 -out localhost.key
+openssl req -x509 -sha256 -nodes -days 10 -key localhost.key -out localhost.crt -config localhost.conf -extensions 'v3_req'
+
+# Generate a hex-encoded (easy to parse) SHA-256 hash of the certificate.
+openssl x509 -in localhost.crt -outform der | openssl dgst -sha256 -binary | xxd -p -c 256 > localhost.hex

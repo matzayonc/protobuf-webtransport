@@ -1,0 +1,24 @@
+[package]
+name = "hole-node"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = "1.0.79"
+bytes = "1.5.0"
+env_logger = "0.11.1"
+lazy_static = "1.4.0"
+log = "0.4.20"
+prost = "0.12.3"
+quinn = "0.10.2"
+rcgen = { version = "0.12.1", features = ["x509-parser"] }
+rustls = { version = "0.21", features = ["quic"] }
+rustls-pemfile = "1.0.2"
+tokio = { version = "1.35.1", features = ["full"] }
+url = "2.5.0"
+webtransport-quinn = "0.7.0"
+
+[build-dependencies]
+prost-build = "0.12.3"
