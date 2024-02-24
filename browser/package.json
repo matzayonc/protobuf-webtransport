@@ -11,7 +11,8 @@
 		"lint": "prettier --check . && eslint .",
 		"format": "prettier --write .",
 		"test:integration": "playwright test",
-		"test:unit": "vitest"
+		"test:unit": "vitest",
+		"proto": "protoc --plugin='protoc-gen-ts=./node_modules/.bin/protoc-gen-ts' --plugin='protoc-gen-js=./node_modules/.bin/protoc-gen-js' --ts_opt=esModuleInterop=true --js_out='./lib/proto' --ts_out='./lib/proto' ../protos/hello.proto -I ../protos"
 	},
 	"devDependencies": {
 		"@fontsource/fira-mono": "^4.5.10",
@@ -35,5 +36,9 @@
 		"vite": "^5.0.3",
 		"vitest": "^1.2.0"
 	},
-	"type": "module"
+	"type": "module",
+	"dependencies": {
+		"protoc-gen-js": "^3.21.2",
+		"ts-protoc-gen": "^0.15.0"
+	}
 }
