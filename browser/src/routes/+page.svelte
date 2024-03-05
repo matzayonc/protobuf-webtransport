@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { readData, run } from '../lib/connection';
+	import { readData, run } from '../lib/utils';
 	import { connection } from '../lib/stores/connection';
 
 	let output = $state('');

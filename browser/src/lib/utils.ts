@@ -19,15 +19,12 @@ export const run = async (msg: string, wt: WebTransport) => {
 
 	console.log('connected');
 
-	let writer;
-	let reader;
-
 	// Create a bidirectional stream
 	const stream = await wt.createBidirectionalStream();
 	console.log('created stream');
 
-	writer = stream.writable.getWriter();
-	reader = stream.readable.getReader();
+	const writer = stream.writable.getWriter();
+	const reader = stream.readable.getReader();
 
 	// Create a message
 	const encoded = new TextEncoder().encode(msg);
