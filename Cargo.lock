@@ -454,6 +454,7 @@ dependencies = [
  "log",
  "prost",
  "prost-build",
+ "prost-types",
  "quinn",
  "rcgen",
  "rustls",

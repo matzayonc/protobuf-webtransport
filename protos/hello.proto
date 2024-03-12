@@ -3,8 +3,11 @@ package chat;
 
 service Messenger {
   rpc Publish (PublishRequest) returns (PublishReply) {}
-  rpc Update (UpdateRequest) returns (PublishReply) {}
+  rpc Update (Messages) returns (PublishReply) {}
+  rpc Fetch (Empty) returns (Messages) {}
 }
+
+message Empty {}
 
 message PublishRequest {
   string message = 1;
@@ -14,6 +17,6 @@ message PublishReply {
   string message = 1;
 }
 
-message UpdateRequest {
+message Messages {
   repeated string messages = 1;
 }

@@ -12,6 +12,7 @@ env_logger = "0.11.1"
 lazy_static = "1.4.0"
 log = "0.4.20"
 prost = "0.12.3"
+prost-types = "0.12.3"
 quinn = "0.10.2"
 rcgen = { version = "0.12.1", features = ["x509-parser"] }
 rustls = { version = "0.21", features = ["quic"] }

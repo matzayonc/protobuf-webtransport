@@ -12,12 +12,13 @@
 		"format": "prettier --write .",
 		"test:integration": "playwright test",
 		"test:unit": "vitest",
-		"proto": "protoc --plugin='protoc-gen-ts=./node_modules/.bin/protoc-gen-ts' --plugin='protoc-gen-js=./node_modules/.bin/protoc-gen-js' --ts_opt=esModuleInterop=true --js_out='./lib/proto' --ts_out='./lib/proto' ../protos/hello.proto -I ../protos"
+		"proto": "protoc --plugin=protoc-gen-ts=node_modules/.bin/protoc-gen-ts --ts_out=./src/lib/proto -I ../protos ../protos/hello.proto"
 	},
 	"devDependencies": {
 		"@fontsource/fira-mono": "^4.5.10",
 		"@neoconfetti/svelte": "^1.0.0",
 		"@playwright/test": "^1.28.1",
+		"@protobuf-ts/plugin": "^2.9.3",
 		"@sveltejs/adapter-auto": "^3.0.0",
 		"@sveltejs/kit": "^2.0.0",
 		"@sveltejs/vite-plugin-svelte": "^3.0.0",
@@ -37,8 +38,5 @@
 		"vitest": "^1.2.0"
 	},
 	"type": "module",
-	"dependencies": {
-		"protoc-gen-js": "^3.21.2",
-		"ts-protoc-gen": "^0.15.0"
-	}
+	"dependencies": {}
 }

@@ -1,3 +1,5 @@
+import { Messages } from './proto/hello';
+
 export async function readData(receiveStream) {
 	const reader = receiveStream.getReader();
 	let recv = '';
@@ -7,7 +9,8 @@ export async function readData(receiveStream) {
 			break;
 		}
 		// value is a Uint8Array
-		recv = new TextDecoder().decode(value);
+		recv = Messages.fromBinary(value).messages.join('\n');
+		// recv = new TextDecoder().decode(value);
 
 		console.log('got data from unidirectional stream: ' + recv);
 	}

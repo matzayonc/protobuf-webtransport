@@ -97,7 +97,7 @@ async fn run_session(session: Session) -> anyhow::Result<()> {
                 if let Ok(()) = snd {
                     let messages = MESSAGES.lock().await.clone();
 
-                    let req = crate::chat::UpdateRequest {
+                    let req = crate::chat::Messages {
                         messages,
                     };
 
